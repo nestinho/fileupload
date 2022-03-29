@@ -22,6 +22,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
+                            <a href="{{ url('file/download/'.$file->id) }}" class="btn btn-success">Download</a>
                         </form>
                     </div>
                 </div>
