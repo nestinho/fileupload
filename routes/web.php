@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\MultipleFileUploadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,10 @@ Route::get('/', function () {
 });
 
 Route::resource('/file',FileController::class);
+Route::delete('/file/{id}',[FileController::class,'destroy']);
+
+Route::resource('/multiple',MultipleFileUploadController::class);
+Route::delete('/multiple/{id}',[MultipleFileUploadController::class,'destroy']);
 
 Auth::routes();
 

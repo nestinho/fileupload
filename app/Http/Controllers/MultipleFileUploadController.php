@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\File;
 use Illuminate\Support\Facades\Storage;
 
-class FileController extends Controller
+class MultipleFileUploadController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class FileController extends Controller
     public function index()
     {
         $files = File::orderBy('created_at','DESC')->paginate(30);
-        return view('file.index',['files' => $files]);
+        return view('multiple.index',['files' => $files]);
     }
 
     /**
@@ -26,7 +26,7 @@ class FileController extends Controller
      */
     public function create()
     {
-        return view('file.create');
+        return view('multiple.create');
     }
 
     /**
@@ -43,20 +43,24 @@ class FileController extends Controller
         // ]);
 
         // Or this way
-        $request->validate([
-            'file' => 'required | file | max : 20000'
-        ]);
+        // $request->validate([
+        //     'file' => 'required | file| mimes : png, jpg, webp, jpeg, gif, pdf, docx, 
+        //     ppt, xlsx,xps, odt,
+        //     | max : 20000'
+        // ]);
 
-        $upload = $request->file('file');
-        $path = $upload->store('public/storage');
-        $file = File::create([
-            'title' => $upload->getClientOriginalName(),
+        $files = $request->file('file');
+        foreach ($files as $file) {
+
+         File::create([
+            'title' => $file->getClientOriginalName(),
             'description' => '',
-            'path' => $path
+            'path' => $file->store('public/storage'),
+            
         ]);
-        $file->save();
-
-        return redirect('/file')->with('success','File was successfully uploaded!');
+        // $file->save();
+        }
+        return redirect('/multiple')->with('success','Files were successfully uploaded!');
     }
 
     /**
@@ -67,7 +71,7 @@ class FileController extends Controller
      */
     public function show($id)
     {
-        //
+         //
     }
 
     /**
@@ -101,16 +105,16 @@ class FileController extends Controller
      */
     public function destroy($id)
     {
-        //1. Find id (specific) file to delete
-        $file = File::find($id);
+         //1. Find id (specific) file to delete
+         $file = File::find($id);
 
-        //2. Unset/delete it's path
-        Storage::delete($file->path);
-
-        //3. delete the file from storage
-        $file->delete();
-
-        //4. redirecting to a page after delet action is completed
-        return redirect('file')->with('success','File has been deleted successfully!');
+         //2. Unset/delete it's path
+         Storage::delete($file->path);
+ 
+         //3. delete the file from storage
+         $file->delete();
+ 
+         //4. redirecting to a page after delet action is completed
+         return redirect('multiple')->with('success','File has been deleted successfully!');
     }
 }
