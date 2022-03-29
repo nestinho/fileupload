@@ -22,6 +22,7 @@ Route::get('/', function () {
 Route::resource('/file',FileController::class);
 Route::delete('/file/{id}',[FileController::class,'destroy']);
 Route::get('/file/download/{id}',[FileController::class,'show']);
+Route::get('/file/email/{id}',[FileController::class,'edit']);
 
 Route::resource('/multiple',MultipleFileUploadController::class);
 Route::delete('/multiple/{id}',[MultipleFileUploadController::class,'destroy']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 class FileController extends Controller
 {
@@ -79,7 +80,18 @@ class FileController extends Controller
      */
     public function edit($id)
     {
-        //
+        $file = File::find($id);
+        $data = array(
+            'title' => $file->title,
+            'path' => $file->path,
+        );
+        Mail::send('email.attachement', $data, function($message) use ($file){
+            $message->to('cosmasp59@gmail.com', 'Cosmas Paulo')->subject('Laravel Email File Attachement Tutorial.');
+            $message->attach(storage_path('app/'.$file->path));
+            $message->from('nestory2008@gmail.com', 'Nestory Sylivester');
+        });
+
+        return redirect('/file')->with('success','File attachement has been sent via an email!');
     }
 
     /**
